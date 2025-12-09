@@ -1,0 +1,50 @@
+wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.111/bin/apache-tomcat-9.0.111.tar.gz
+
+tar -xvf apache-tomcat-9.0.111.tar.gz
+
+sudo mv apache-tomcat-9.0.111 /opt/tomcat9
+
+sudo chmod -R 755 /opt/tomcat9
+sudo chmod +x /opt/tomcat9/bin/*.sh
+
+
+sudo nano /etc/systemd/system/tomcat9.service
+add this - [Unit]
+Description=Apache Tomcat 9
+After=network.target
+
+[Service]
+Type=forking
+
+Environment=JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+Environment=CATALINA_PID=/opt/tomcat9/temp/tomcat.pid
+Environment=CATALINA_HOME=/opt/tomcat9
+Environment=CATALINA_BASE=/opt/tomcat9
+
+ExecStart=/opt/tomcat9/bin/startup.sh
+ExecStop=/opt/tomcat9/bin/shutdown.sh
+
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target
+
+sudo systemctl daemon-reload
+sudo systemctl start tomcat9
+sudo systemctl enable tomcat9
+
+systemctl status tomcat9
+
+
+change to 8081
+sudo nano /opt/tomcat9/conf/server.xml
+change this <Connector port="8081" protocol="HTTP/1.1"
+           connectionTimeout="20000"
+           redirectPort="8443" />
+
+sudo systemctl restart tomcat9
+
+http://localhost:8081
+
+
