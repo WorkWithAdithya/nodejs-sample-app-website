@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: monitorappsec
-        image: aadithya001/nodejsapp:v1
+        image: aadithya001/nodejsappp:v1
         ports:
         - containerPort: 3000
