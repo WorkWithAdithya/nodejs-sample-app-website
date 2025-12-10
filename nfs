@@ -1,0 +1,68 @@
+✅ NFS Setup – MASTER NODE (Server)
+1️⃣ Install NFS Kernel Server
+sudo apt install nfs-kernel-server -y
+
+2️⃣ Create Shared Directory
+sudo mkdir -p /nfs/shared
+sudo chmod 777 /nfs/shared
+
+3️⃣ Configure Exports File
+
+Open the exports file:
+
+sudo nano /etc/exports
+
+
+Add entries for each slave (example IPs from your notes):
+
+/nfs/shared 172.18.181.85(rw,sync,no_subtree_check)
+/nfs/shared 172.18.181.86(rw,sync,no_subtree_check)
+
+
+Save & exit (CTRL + O → ENTER → CTRL + X).
+
+4️⃣ Update Export Table
+sudo exportfs -a
+
+5️⃣ Restart NFS Server
+sudo systemctl restart nfs-kernel-server
+
+6️⃣ Verify Export
+sudo exportfs -v
+
+✅ NFS Setup – SLAVE NODE (Client)
+1️⃣ Install NFS Common
+sudo apt install nfs-common -y
+
+2️⃣ Create Mount Folder
+sudo mkdir -p /nfs/shared
+
+3️⃣ Mount MASTER Shared Directory
+
+Syntax:
+
+sudo mount <master-ip>:/nfs/shared /nfs/shared
+
+
+Example (from your notes):
+
+sudo mount 172.18.181.85:/nfs/shared /nfs/shared
+
+4️⃣ Test the Mount
+
+Go to directory:
+
+cd /nfs/shared
+
+
+Create a test file:
+
+touch amrutha.txt
+
+
+Now check:
+
+ls
+
+
+You should see amrutha.txt — it will also appear on MASTER.
