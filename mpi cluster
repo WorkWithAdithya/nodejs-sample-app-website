@@ -1,0 +1,40 @@
+MPI CLUSTER SETUP GUIDE (MASTER + SLAVE)
+
+SECTION 1 — OPERATIONS ON BOTH NODES
+
+1.  Install required packages: sudo apt update sudo apt install -y
+    openmpi-bin openmpi-common openssh-server
+
+2.  Ensure SSH server is running: sudo systemctl enable ssh sudo
+    systemctl start ssh
+
+3.  Create same user on both: sudo adduser mpiuser
+
+4.  Create ~/.ssh directory: mkdir -p ~/.ssh chmod 700 ~/.ssh
+
+5.  Set hostnames: Master: sudo hostnamectl set-hostname master Slave:
+    sudo hostnamectl set-hostname slave
+
+6.  Update /etc/hosts on both: 192.168.1.10 master 192.168.1.11 slave
+
+7.  Ensure identical MPI versions: mpirun –version
+
+SECTION 2 — OPERATIONS ONLY ON MASTER
+
+1.  Generate SSH key: ssh-keygen -t rsa
+
+2.  Copy key to slave: ssh-copy-id mpiuser@slave
+
+3.  Test passwordless login: ssh slave
+
+4.  Create MPI hostfile: nano ~/hosts
+
+    Contents: master slots=2 slave slots=2
+
+5.  Run MPI program: mpirun –hostfile hosts -np 4 hostname
+
+SECTION 3 — OPERATIONS ONLY ON SLAVE
+
+1.  Accept master’s SSH key (auto via ssh-copy-id)
+2.  Ensure SSH server running: sudo systemctl status ssh
+
